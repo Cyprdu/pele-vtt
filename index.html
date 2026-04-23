@@ -1,0 +1,721 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pélé VTT Belley-Ars 2026</title>
+    
+    <link rel="icon" type="image/png" href="https://www.pele-vtt.fr/assets/img/favicon.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --primary: #F2A900; /* Jaune/Orange dynamique */
+            --secondary: #0033A0; /* Bleu profond */
+            --dark: #0B132B;
+            --light: #F8F9FA;
+            --white: #ffffff;
+            --text: #2C3E50;
+            --gradient: linear-gradient(135deg, #0033A0 0%, #0B132B 100%);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+
+        /* --- LOADER OVERLAY --- */
+        #loader-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .loader-logo {
+            width: 200px;
+            animation: pulseLogo 1.5s infinite ease-in-out;
+            margin-bottom: 20px;
+        }
+        @keyframes pulseLogo {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.7; }
+        }
+
+        /* --- MODAL INSCRIPTION --- */
+        #registration-page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #registration-page.active { transform: translateY(0); }
+        .reg-header {
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        .close-reg {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--white);
+            padding: 10px 25px;
+            background: var(--secondary);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .close-reg:hover { background: var(--dark); transform: scale(1.05); }
+        .iframe-wrapper { flex-grow: 1; overflow-y: scroll; -webkit-overflow-scrolling: touch; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            color: var(--white);
+            background: linear-gradient(135deg, rgba(11, 19, 43, 0.85), rgba(0, 51, 160, 0.75)), url('https://www.pele-vtt.fr/six/img/source/defaut/camp/camp_8.jpg') center/cover fixed;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            width: 100%;
+            padding: 20px;
+            margin-top: -50px;
+        }
+        .hero-logo {
+            width: 200px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.6));
+        }
+        .hero-content h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .hero-content .subtitle {
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        .glass-info {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-flex;
+            gap: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .btn-primary {
+            display: inline-block;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--dark);
+            background-color: var(--primary);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(242, 169, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(242, 169, 0, 0.5);
+            background-color: #ffb81c;
+        }
+
+        /* --- VIDEO TEASER --- */
+        .video-teaser-section {
+            margin-top: -100px; /* Fait remonter la vidéo sur le hero */
+            position: relative;
+            z-index: 5;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .video-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--dark);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            border: 5px solid var(--white);
+        }
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+
+        /* --- SECTION COMMUNES --- */
+        section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 5px;
+            background: var(--primary);
+            margin: 15px auto 0;
+            border-radius: 5px;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- LE MOT / LETTRE --- */
+        .letter-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .letter-container {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary);
+        }
+        .letter-container p { font-size: 1.05rem; margin-bottom: 15px; color: #555; }
+        
+        .infos-rapides {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .infos-rapides h3 { color: var(--primary); margin-bottom: 20px; }
+        .info-item { margin-bottom: 15px; display: flex; gap: 15px; align-items: center; }
+        .info-item i { font-size: 1.5rem; color: var(--white); opacity: 0.8; }
+
+        /* --- LES ACTEURS DU PELE (GRID) --- */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .role-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        .role-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 4px solid var(--primary);
+        }
+        .role-content {
+            padding: 25px;
+            flex-grow: 1;
+        }
+        .role-title {
+            color: var(--secondary);
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .role-age {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .role-content p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* --- TARIFS --- */
+        .tarifs-section { background-color: var(--white); padding: 80px 20px; }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .price-card {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .price-card.featured {
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 15px 30px rgba(242, 169, 0, 0.1);
+            transform: scale(1.05);
+        }
+        .price-badge {
+            position: absolute;
+            top: 20px; right: -35px;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .price-amount {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--secondary);
+            margin: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .price-amount span { font-size: 1.5rem; }
+
+        /* --- CTA INSCRIPTION --- */
+        .cta-section {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .venio-info {
+            background: rgba(0, 51, 160, 0.05);
+            border-left: 4px solid var(--secondary);
+            padding: 20px 25px;
+            border-radius: 0 15px 15px 0;
+            max-width: 800px;
+            margin: 30px auto;
+            text-align: left;
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #060b19;
+            color: var(--white);
+            padding: 80px 20px 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+        }
+        .footer-logo {
+            width: 150px;
+            margin-bottom: 20px;
+            filter: brightness(0) invert(1);
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #aaa;
+        }
+        .contact-item i { color: var(--primary); font-size: 1.2rem; margin-top: 5px; }
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .letter-grid { grid-template-columns: 1fr; }
+            .price-card.featured { transform: scale(1); }
+        }
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.8rem; }
+            .glass-info { flex-direction: column; gap: 10px; border-radius: 20px; }
+            .section-title { font-size: 2rem; }
+            .video-teaser-section { margin-top: -50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-overlay">
+        <img src="https://www.pele-vtt.fr/assets/img/logo_v2.png" class="loader-logo" alt="Logo Pélé VTT">
+        <h2 style="color: white; font-family: 'Montserrat';">Connexion à Venio...</h2>
+    </div>
+
+    <div id="registration-page">
+        <div class="reg-header">
+            <div>
+                <img src="https://www.pele-vtt.fr/assets/img/logo_v2.png" alt="Logo" style="height: 40px; vertical-align: middle; margin-right: 15px;">
+                <span style="font-weight: 800; font-size: 1.2rem; color: var(--dark); font-family: 'Montserrat', sans-serif; display: inline-block; vertical-align: middle;">Inscription 2026</span>
+            </div>
+            <div class="close-reg" onclick="closeRegistration()">
+                <i class="fa-solid fa-xmark" style="margin-right: 8px;"></i> Fermer
+            </div>
+        </div>
+        <div class="iframe-wrapper">
+            <iframe id="venio-iframe" title="Inscription Venio"></iframe>
+        </div>
+    </div>
+
+    <header class="hero">
+        <div class="hero-content" data-aos="zoom-in" data-aos-duration="1000">
+            <img src="https://www.pele-vtt.fr/assets/img/logo_v2.png" alt="Pélé VTT" class="hero-logo">
+            <h1>Belley-Ars 2026</h1>
+            <div class="subtitle">L'aventure de Bourg-en-Bresse à Cuet</div>
+            
+            <div class="glass-info">
+                <span><i class="fa-solid fa-calendar-check" style="color: var(--primary);"></i> 6 au 10 Juillet 2026</span>
+                <span style="opacity: 0.5; display: none;">|</span>
+                <span><i class="fa-solid fa-campground" style="color: var(--primary);"></i> Hébergement Tentes</span>
+            </div>
+            <br>
+            <button class="btn-primary" onclick="openRegistration()">
+                <i class="fa-solid fa-bicycle" style="margin-right: 10px;"></i> Je m'inscris !
+            </button>
+        </div>
+    </header>
+
+    <div class="video-teaser-section" data-aos="fade-up" data-aos-delay="200">
+        <div class="video-container">
+            <video controls preload="none" poster="https://cdn.pele-vtt.fr/media/915ea345-f6af-4d49-a4ea-196462077371">
+                <source src="http://moncamp.fr/video/TEASER%20P%C3%89L%C3%89%20VTT%202026.mov" type="video/mp4">
+                <source src="http://moncamp.fr/video/vtt.webm" type="video/webm">
+                Votre navigateur ne supporte pas la balise vidéo.
+            </video>
+        </div>
+    </div>
+
+    <section id="presentation" style="padding-top: 100px;">
+        <h2 class="section-title" data-aos="fade-up">En route vers Cuet !</h2>
+        <p class="section-subtitle" data-aos="fade-up">Le Pélé VTT est une aventure extraordinaire pour découvrir Jésus, approfondir sa relation avec Lui et partager de beaux moments à travers notre diocèse.</p>
+        
+        <div class="letter-grid">
+            <div class="letter-container" data-aos="fade-right">
+                <h3 style="color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem;">Chers amis,</h3>
+                <p>Nous voilà à quelques mois de notre rendez-vous annuel du <strong>Pélé VTT</strong>. Pour cette 5ème édition, nous partirons à la découverte de Cuet, ville qui abrite le Sanctuaire de saint Pierre Chanel.</p>
+                <p>Le départ se fera à <strong>Bourg-en-Bresse</strong>, ce qui nous donnera l'opportunité de rouler à travers les chemins en faisant escale à Meillonnas, Cuiseaux, Montpont en Bresse et Replonge.</p>
+            </div>
+
+            <div class="infos-rapides" data-aos="fade-left">
+                <h3><i class="fa-solid fa-map-location-dot"></i> Le Programme</h3>
+                <div class="info-item">
+                    <i class="fa-solid fa-bicycle"></i>
+                    <div><strong>Collégiens</strong><br>Départ 6 juillet, arrivée 10 juillet.</div>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-hands-holding-circle"></i>
+                    <div><strong>Lycéens & Bénévoles</strong><br>Pré-camp les 4 et 5 juillet (site du diocèse de Belley-Ars).</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="acteurs" style="background-color: var(--light);">
+        <h2 class="section-title" data-aos="fade-up">Les acteurs du Pélé</h2>
+        <p class="section-subtitle" data-aos="fade-up">À chacun sa mission pour faire vivre ce grand projet d'Église !</p>
+
+        <div class="roles-grid">
+            
+            <div class="role-card" data-aos="fade-up" data-aos-delay="0">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/pedalants/pedalants_4.jpg" alt="Pédalants" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Les Pédalants <i class="fa-solid fa-person-biking" style="color:#ccc;"></i></h3>
+                    <span class="role-age">11 - 15 ans</span>
+                    <p>Ils sont en équipes de 12. Ils font du vélo, des jeux, des temps de prière et vivent une grande aventure.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/staff/staff_16_carre.jpg" alt="Staff" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Le Staff <i class="fa-solid fa-hammer" style="color:#ccc;"></i></h3>
+                    <span class="role-age">16 - 18 ans</span>
+                    <p>Ils montent et démontent le camp, animent les veillées et ont des temps spi. Ils découvrent qu'il y a plus de joie à donner qu'à recevoir.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/animateurs/animateurs_9.jpg" alt="Animateurs" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Les Animateurs <i class="fa-solid fa-users" style="color:#ccc;"></i></h3>
+                    <span class="role-age">18 - 25 ans</span>
+                    <p>Ils accompagnent les pédalants. Ils sont deux par équipe. Ils reçoivent la responsabilité des plus jeunes et peuvent valider leur BAFA.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="300">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/ttv/TTV_5.jpg" alt="TTV" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Les TTV <i class="fa-solid fa-truck-fast" style="color:#ccc;"></i></h3>
+                    <span class="role-age">Très Très Vieux</span>
+                    <p>Ils s'occupent de la logistique : repas, sécurité, infirmerie, matériel, secrétariat, etc. Ils se mettent au service de l'évangélisation des jeunes.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="0">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/abs/ABS_7.jpg" alt="ABS" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Les ABS <i class="fa-solid fa-cross" style="color:#ccc;"></i></h3>
+                    <span class="role-age">Abbés, Sœurs, Séminaristes</span>
+                    <p>Ils pédalent avec les jeunes, célèbrent les sacrements et prient ensemble. Ils témoignent de la vie consacrée.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/ggg/GGG_14.jpg" alt="GGG" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Le GGG <i class="fa-solid fa-church" style="color:#ccc;"></i></h3>
+                    <span class="role-age">Grande Gueule Générale</span>
+                    <p>Il est prêtre. C'est le grand responsable du camp devant l'Eglise.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/ggg/GGG_16.jpg" alt="OGM" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">L'OGM <i class="fa-solid fa-clipboard-check" style="color:#ccc;"></i></h3>
+                    <span class="role-age">Organisateur Général Merveilleux</span>
+                    <p>Il possède le BAFD. C'est le garant et le responsable du camp devant la loi.</p>
+                </div>
+            </div>
+
+            <div class="role-card" data-aos="fade-up" data-aos-delay="300">
+                <img src="https://www.pele-vtt.fr/six/img/source/defaut/ggg/GGG_27.jpg" alt="GPS" class="role-img">
+                <div class="role-content">
+                    <h3 class="role-title">Le GPS <i class="fa-solid fa-map-pin" style="color:#ccc;"></i></h3>
+                    <span class="role-age">Guide Pour le Salut</span>
+                    <p>En pleine communion avec lui, c'est l'évêque du diocèse qui soutient et guide le pèlerinage.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="tarifs" class="tarifs-section">
+        <h2 class="section-title" data-aos="fade-up">Tarifs de l'édition</h2>
+        <p style="text-align: center; max-width: 600px; margin: 0 auto 50px; font-size: 1.05rem;">
+            L'argent ne doit en aucun cas être un obstacle à la participation de votre enfant. N'hésitez pas à nous contacter en cas de besoin.
+        </p>
+        
+        <div class="pricing-grid">
+            <div class="price-card" data-aos="zoom-in" data-aos-delay="0">
+                <h3 style="color: #666; font-size: 1.2rem;">Animateurs & TTV</h3>
+                <div class="price-amount">30<span>€</span></div>
+                <p>Par personne</p>
+            </div>
+            
+            <div class="price-card featured" data-aos="zoom-in" data-aos-delay="100">
+                <div class="price-badge">Standard</div>
+                <h3 style="color: var(--secondary); font-size: 1.4rem;">1 Enfant</h3>
+                <div class="price-amount">120<span>€</span></div>
+                <p>Tarif de base (Collégien ou Staff)</p>
+            </div>
+
+            <div class="price-card" data-aos="zoom-in" data-aos-delay="200">
+                <h3 style="color: #666; font-size: 1.2rem;">Fratries</h3>
+                <div class="price-amount">220<span>€</span></div>
+                <p style="margin-bottom: 5px;">Pour 2 enfants</p>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+                <p style="font-size: 0.95rem;"><strong>300 €</strong> pour 3 enfants<br><strong>+ 80 €</strong> par enfant supp.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="cta-section">
+        <h2 style="font-family: 'Montserrat'; font-size: 2.5rem; color: var(--dark); margin-bottom: 10px;" data-aos="fade-up">Rejoignez l'aventure !</h2>
+        
+        <div class="venio-info" data-aos="fade-up" data-aos-delay="100">
+            <strong><i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> Procédure d'inscription :</strong><br>
+            Lorsque l'inscription de votre enfant est prise en compte, vous recevrez automatiquement un mail afin de poursuivre sur la plateforme <strong>VENIO</strong>. L'inscription sera définitivement validée après réception de tous les documents sur Venio.
+        </div>
+        
+        <button class="btn-primary" style="font-size: 1.3rem; padding: 20px 50px;" onclick="openRegistration()" data-aos="fade-up" data-aos-delay="200">
+            Accéder à la billetterie Venio
+        </button>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <img src="https://www.pele-vtt.fr/assets/img/logo_v2.png" alt="Logo Pélé VTT" class="footer-logo">
+                <p style="color: #aaa; margin-top: 15px; font-size: 0.95rem;">Une belle aventure offerte pour découvrir Jésus, approfondir sa foi et partager de beaux moments entre jeunes.</p>
+            </div>
+            
+            <div>
+                <h3 style="color: var(--white); margin-bottom: 20px; font-size: 1.3rem;">Contact</h3>
+                <div class="contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div>
+                        <strong>Email</strong><br>
+                        <a href="mailto:pelevtt01@gmail.com" style="color: #aaa; text-decoration: none;">pelevtt01@gmail.com</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <div>
+                        <strong>Téléphone</strong><br>
+                        06 23 25 60 49
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="color: var(--white); margin-bottom: 20px; font-size: 1.3rem;">Adresse</h3>
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>
+                        <strong>Pastorale des Jeunes et des Vocations</strong><br>
+                        31, rue du Docteur Nodet<br>
+                        CS 60154<br>
+                        01000 Bourg en Bresse Cedex
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            &copy; 2026 Pélé VTT Belley-Ars. Tous droits réservés.
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Animations AOS
+        AOS.init({
+            once: true,
+            offset: 80,
+            duration: 800
+        });
+
+        // Gestion de l'Iframe d'inscription VENIO
+        const venioUrl = "https://pelevttbelleyars2026-bourgenbressecuet.venio.fr/fr";
+        
+        function openRegistration() {
+            const loader = document.getElementById('loader-overlay');
+            const regPage = document.getElementById('registration-page');
+            const iframe = document.getElementById('venio-iframe');
+            
+            loader.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            if(iframe.src !== venioUrl) {
+                iframe.src = venioUrl;
+            }
+
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.4s ease';
+                
+                regPage.style.display = 'flex';
+                setTimeout(() => {
+                    regPage.classList.add('active');
+                }, 50);
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    loader.style.opacity = '1';
+                }, 400);
+            }, 1000);
+        }
+
+        function closeRegistration() {
+            const regPage = document.getElementById('registration-page');
+            regPage.classList.remove('active');
+            
+            setTimeout(() => {
+                regPage.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 400);
+        }
+    </script>
+</body>
+</html>
